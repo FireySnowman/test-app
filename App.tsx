@@ -3,7 +3,7 @@ import React, { useState, useRef, useCallback } from 'react';
 import { Path } from './types';
 import Toolbar from './components/Toolbar';
 import Canvas from './components/Canvas';
-import { beautifyDrawing } from './services/geminiService';
+// import { beautifyDrawing } from './services/geminiService';
 
 interface CanvasHandles {
   clear: () => void;
