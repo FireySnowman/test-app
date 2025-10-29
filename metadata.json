@@ -1,5 +1,5 @@
 {
-  "name": "AI Drawing Pad",
-  "description": "A simple drawing application that uses AI to beautify your sketches. Draw on the canvas, select colors and brush sizes, and then use the power of Gemini to transform your drawing into a polished piece of art.",
+  "name": "Drawing Pad",
+  "description": "A simple drawing application. Draw on the canvas, select colors and brush sizes. You can clear, undo, and download your creations.",
   "requestFramePermissions": []
 }

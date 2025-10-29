@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 export const BrushIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
@@ -29,10 +28,4 @@ export const DownloadIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => 
   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" {...props}>
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
   </svg>
-);
-
-export const SparklesIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" {...props}>
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m1-12a1 1 0 011 1v3a1 1 0 01-2 0V5a1 1 0 011-1zm12 12a1 1 0 011 1v3a1 1 0 01-2 0v-3a1 1 0 011-1zm-7-1a1 1 0 011 1v7a1 1 0 11-2 0v-7a1 1 0 011-1zm-4-7a1 1 0 011 1v3a1 1 0 11-2 0V6a1 1 0 011-1zm12 5a1 1 0 011 1v3a1 1 0 11-2 0v-3a1 1 0 011-1z" />
-    </svg>
 );

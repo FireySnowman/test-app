@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { BrushIcon, EraserIcon, UndoIcon, ClearIcon, DownloadIcon, SparklesIcon } from './Icons';
+import { BrushIcon, EraserIcon, UndoIcon, ClearIcon, DownloadIcon } from './Icons';
 
 interface ToolbarProps {
   color: string;
@@ -12,8 +11,6 @@ interface ToolbarProps {
   onClear: () => void;
   onUndo: () => void;
   onDownload: () => void;
-  onBeautify: () => void;
-  isLoading: boolean;
 }
 
 const colors = [
@@ -32,8 +29,6 @@ const Toolbar: React.FC<ToolbarProps> = ({
   onClear,
   onUndo,
   onDownload,
-  onBeautify,
-  isLoading
 }) => {
   return (
     <div className="flex-shrink-0 w-full md:w-64 bg-slate-800 p-4 flex flex-row md:flex-col items-center md:items-stretch gap-4 overflow-x-auto md:overflow-y-auto">
@@ -79,27 +74,6 @@ const Toolbar: React.FC<ToolbarProps> = ({
             <ActionButton onClick={onClear} label="Clear"><ClearIcon/></ActionButton>
             <ActionButton onClick={onDownload} label="Download"><DownloadIcon/></ActionButton>
         </div>
-      </div>
-
-      {/* Group 4: AI Action */}
-      <div className="p-3 bg-slate-700 rounded-lg mt-auto">
-        <button
-          onClick={onBeautify}
-          disabled={isLoading}
-          className="w-full flex items-center justify-center gap-2 px-4 py-2 text-base font-semibold text-white bg-purple-600 rounded-lg shadow-md hover:bg-purple-700 disabled:bg-purple-400 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-slate-800 transition-all duration-200"
-        >
-          {isLoading ? (
-            <>
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              <span>Enhancing...</span>
-            </>
-          ) : (
-            <>
-              <SparklesIcon />
-              Beautify
-            </>
-          )}
-        </button>
       </div>
 
     </div>

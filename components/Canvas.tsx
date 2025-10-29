@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect, useState, useImperativeHandle, forwardRef, useCallback } from 'react';
 import { Point, Path } from '../types';
 
@@ -7,6 +6,56 @@ interface CanvasProps {
   strokeWidth: number;
   canvasColor: string;
 }
+
+/**
+ * Draws a smoothed path on the canvas context.
+ * For paths with 3 or more points, it uses quadratic Bézier curves.
+ * For shorter paths, it draws straight lines.
+ * @param ctx The canvas rendering context.
+ * @param path The path to draw.
+ */
+const drawSmoothedPath = (ctx: CanvasRenderingContext2D, path: Path) => {
+  ctx.strokeStyle = path.color;
+  ctx.lineWidth = path.strokeWidth;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  const { points } = path;
+  if (points.length === 0) {
+    return;
+  }
+
+  ctx.beginPath();
+  ctx.moveTo(points[0].x, points[0].y);
+
+  if (points.length < 3) {
+    // For short paths (1 or 2 points), just draw straight lines.
+    // A single point will become a dot because of lineCap='round'.
+    if (points.length > 1) {
+      ctx.lineTo(points[1].x, points[1].y);
+    } else {
+      ctx.lineTo(points[0].x, points[0].y);
+    }
+  } else {
+    // Use quadratic curves for smoothing longer paths.
+    // We'll draw a curve from the current point to the midpoint of the next two points,
+    // using the intermediate point as the control point.
+    for (let i = 1; i < points.length - 2; i++) {
+      const xc = (points[i].x + points[i + 1].x) / 2;
+      const yc = (points[i].y + points[i + 1].y) / 2;
+      ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
+    }
+    // For the last segment, curve to the final point.
+    ctx.quadraticCurveTo(
+      points[points.length - 2].x,
+      points[points.length - 2].y,
+      points[points.length - 1].x,
+      points[points.length - 1].y
+    );
+  }
+  ctx.stroke();
+};
+
 
 const Canvas = forwardRef((props: CanvasProps, ref) => {
   const { strokeColor, strokeWidth, canvasColor } = props;
@@ -27,18 +76,7 @@ const Canvas = forwardRef((props: CanvasProps, ref) => {
     const pathsToDraw = currentPath ? [...history, currentPath] : history;
 
     pathsToDraw.forEach(path => {
-      ctx.strokeStyle = path.color;
-      ctx.lineWidth = path.strokeWidth;
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-      ctx.beginPath();
-      if (path.points.length > 0) {
-        ctx.moveTo(path.points[0].x, path.points[0].y);
-        path.points.forEach(point => {
-          ctx.lineTo(point.x, point.y);
-        });
-        ctx.stroke();
-      }
+      drawSmoothedPath(ctx, path);
     });
   }, [history, currentPath, canvasColor]);
   
@@ -160,16 +198,7 @@ const Canvas = forwardRef((props: CanvasProps, ref) => {
         tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
 
         history.forEach(path => {
-            tempCtx.strokeStyle = path.color;
-            tempCtx.lineWidth = path.strokeWidth;
-            tempCtx.lineCap = 'round';
-            tempCtx.lineJoin = 'round';
-            tempCtx.beginPath();
-            if (path.points.length > 0) {
-              tempCtx.moveTo(path.points[0].x, path.points[0].y);
-              path.points.forEach(point => tempCtx.lineTo(point.x, point.y));
-              tempCtx.stroke();
-            }
+            drawSmoothedPath(tempCtx, path);
         });
         
         return tempCanvas.toDataURL('image/png');
@@ -177,24 +206,6 @@ const Canvas = forwardRef((props: CanvasProps, ref) => {
     loadFromHistory: (newHistory: Path[]) => {
       setHistory(newHistory);
       setCurrentPath(null);
-    },
-    loadImage: (imageUrl: string) => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return;
-        
-        const img = new Image();
-        img.onload = () => {
-            setHistory([]); // Clear drawing history
-            setCurrentPath(null);
-            ctx.fillStyle = canvasColor;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            // We can't perfectly convert image back to paths, so we clear history.
-            // A more advanced implementation might store the image as a special history item.
-        };
-        img.src = imageUrl;
     }
   }));
 
